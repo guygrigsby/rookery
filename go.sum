@@ -1,2 +1,4 @@
+github.com/BurntSushi/toml v1.6.0 h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
+github.com/BurntSushi/toml v1.6.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/guygrigsby/perch v0.1.0 h1:jAKj0W0rT2l61bcxQ52ZJWwlWCvDETvCRbYuuovZiW8=
 github.com/guygrigsby/perch v0.1.0/go.mod h1:9CqzuLVX55FZDhNWmHCx6LYMq+Am3DxpPZIG7+zBjPU=
