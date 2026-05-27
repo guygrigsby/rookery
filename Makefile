@@ -22,6 +22,7 @@ web-dev: $(WEB_DIR)/node_modules ## Run the Vite dev server (proxies to :8080)
 
 web-build: $(WEB_DIR)/node_modules ## Build the SPA into web/dist
 	cd $(WEB_DIR) && npm run build
+	@touch $(WEB_DIR)/dist/.gitkeep
 
 server-build: ## Build the appd daemon (embeds web/dist)
 	go build -o $(APP)d ./cmd/appd

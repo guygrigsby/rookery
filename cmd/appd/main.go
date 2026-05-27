@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	rootapp "github.com/guygrigsby/rookery"
-	"github.com/guygrigsby/rookery/internal/api"
 	"github.com/guygrigsby/perch/config"
 	"github.com/guygrigsby/perch/daemon"
+	rootapp "github.com/guygrigsby/rookery"
+	"github.com/guygrigsby/rookery/internal/api"
 )
 
 // appConfig is the app's config.toml shape. Extend per app.
