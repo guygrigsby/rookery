@@ -36,7 +36,7 @@ func newAuthLoginCmd() *cobra.Command {
 			if err := os.WriteFile(path, []byte(out.Token), 0o600); err != nil {
 				return err
 			}
-			fmt.Fprintf(cmd.OutOrStdout(), "token written to %s\n", path)
+			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "token written to %s\n", path)
 			return nil
 		},
 	}
@@ -54,7 +54,7 @@ func newAuthLogoutCmd() *cobra.Command {
 			if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
 				return err
 			}
-			fmt.Fprintln(cmd.OutOrStdout(), "logged out")
+			_, _ = fmt.Fprintln(cmd.OutOrStdout(), "logged out")
 			return nil
 		},
 	}

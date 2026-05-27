@@ -23,7 +23,7 @@ func newWhoamiCmd() *cobra.Command {
 				return err
 			}
 			b, _ := json.MarshalIndent(out, "", "  ")
-			fmt.Fprintln(cmd.OutOrStdout(), string(b))
+			_, _ = fmt.Fprintln(cmd.OutOrStdout(), string(b))
 			return nil
 		},
 	}
