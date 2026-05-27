@@ -47,8 +47,8 @@ Two binaries under `cmd/`, both thin wrappers over perch:
 
 `appd`/`appctl` are the template's placeholder names; `init.sh` renames them
 per app. The perch dependency is pinned in `go.mod` (`require
-github.com/guygrigsby/perch v0.1.0`); because perch is private, the README and
-CLAUDE.md document `GOPRIVATE=github.com/guygrigsby/*`.
+github.com/guygrigsby/perch v0.1.0`). perch is public, so `go get` resolves
+it through the module proxy with no auth — no `GOPRIVATE` or token setup.
 
 ## Components & file structure
 
@@ -181,13 +181,10 @@ The primary consumer is an agent, so:
   `.golangci.yml` ships a modest, non-pedantic config.
 - **bd (beads)** — documented in `CLAUDE.md` as the issue tracker (no
   TodoWrite/markdown), with `init.sh` giving each app a fresh `.beads/`.
-- **GitHub Actions CI** — `.github/workflows/ci.yml`: `setup-go` 1.26,
-  `setup-node`, export `GOPRIVATE=github.com/guygrigsby/*`, configure git to
-  use a `GH_PAT` secret for the private perch dep
-  (`git config --global url."https://x:${GH_PAT}@github.com/".insteadOf
-  "https://github.com/"`), then `make check`. README/CLAUDE.md document adding
-  the `GH_PAT` repo secret. CI mirrors `make check` so the precommit rule has
-  teeth.
+- **GitHub Actions CI** — `.github/workflows/ci.yml`: `setup-go` 1.26 +
+  `setup-node`, then `make check`. perch is public, so no `GOPRIVATE`, secret,
+  or git-insteadOf setup is needed — `go build` resolves the dep through the
+  proxy. CI mirrors `make check` so the precommit rule has teeth.
 
 ## Conventions (inherited from perch)
 
