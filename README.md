@@ -1,9 +1,9 @@
-# app
+# rookery
 
-Generated from [rookery](https://github.com/guygrigsby/rookery): a two-binary
-daemon/CLI app on [perch](https://github.com/guygrigsby/perch).
+A project template for two-binary daemon/CLI apps built on
+[perch](https://github.com/guygrigsby/perch).
 
-- `appd` — the daemon (serves the API + embedded SPA).
+- `appd` — the daemon (serves the API + an optional embedded Svelte SPA).
 - `appctl` — the CLI client (`auth login`, `whoami`).
 
 ## Quick start
@@ -20,12 +20,3 @@ make build
 `make help` lists everything. The important ones: `build`, `test`, `check`
 (the quality gate), `dev` (hot-reload loop), and the launchd set
 (`install-launchd`, `redeploy`, `service-restart`).
-
-## New app from this template
-
-```bash
-scripts/init.sh <name> [--no-web]
-```
-Renames the binaries, module path, launchd label, and config/log dirs, and
-re-initializes the bd tracker. `--no-web` drops the Svelte layer for a headless
-service.
