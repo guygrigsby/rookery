@@ -14,7 +14,10 @@ run_case() {
       git -c user.email=t@t -c user.name=t commit -qm init && \
       bash scripts/init.sh demoapp "$@" && \
       go mod tidy >/dev/null 2>&1 && \
-      go build ./... && go vet ./... )
+      go build ./... && go vet ./... && \
+      test -f README.md && test ! -e README.app.md && \
+      grep -q '^# demoapp$' README.md && \
+      ! grep -qi rookery README.md )
   echo "✓ init smoke: $label"
 }
 

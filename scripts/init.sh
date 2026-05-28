@@ -43,6 +43,7 @@ git ls-files | grep -v '^scripts/init.sh$' | while IFS= read -r f; do
     -e "s|appctl|${NAME}ctl|g" \
     -e "s|appd|${NAME}d|g" \
     -e "s|^package app\$|package ${NAME}|" \
+    -e "s|^# app\$|# ${NAME}|" \
     -e "s|\"app CLI\"|\"${NAME} CLI\"|g" \
     -e "s|\"app\"|\"${NAME}\"|g" \
     -e "s|APP_|${UPPER}_|g" \
@@ -59,6 +60,12 @@ done
 git mv cmd/appd "cmd/${NAME}d"
 git mv cmd/appctl "cmd/${NAME}ctl"
 git mv deploy/dev.grigsby.appd.plist.template "deploy/dev.grigsby.${NAME}d.plist.template"
+
+# Swap the template's own README for the app README (the sed loop above already
+# rewrote README.app.md's tokens, including its `# app` title).
+if [[ -f README.app.md ]]; then
+  mv -f README.app.md README.md
+fi
 
 # --no-web: drop web/ and replace embed.go with a no-embed stub.
 if [[ "$NO_WEB" == "1" ]]; then
