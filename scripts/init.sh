@@ -44,7 +44,6 @@ git ls-files | grep -v '^scripts/init.sh$' | while IFS= read -r f; do
     -e "s|appd|${NAME}d|g" \
     -e "s|^package app\$|package ${NAME}|" \
     -e "s|\"app CLI\"|\"${NAME} CLI\"|g" \
-    -e "s|\"app daemon\.\"|\"${NAME} daemon.\"|g" \
     -e "s|\"app\"|\"${NAME}\"|g" \
     -e "s|APP_|${UPPER}_|g" \
     -e "s|\.logs/app|.logs/${NAME}|g" \

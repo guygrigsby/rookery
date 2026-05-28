@@ -21,3 +21,5 @@ jobs:
           version: latest
       - name: make check
         run: make check
+      - name: make test
+        run: make test

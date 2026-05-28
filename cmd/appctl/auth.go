@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/guygrigsby/perch/client"
 	"github.com/spf13/cobra"
@@ -30,7 +31,7 @@ func newAuthLoginCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if err := os.MkdirAll(dirOf(path), 0o700); err != nil {
+			if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 				return err
 			}
 			if err := os.WriteFile(path, []byte(out.Token), 0o600); err != nil {
@@ -58,14 +59,4 @@ func newAuthLogoutCmd() *cobra.Command {
 			return nil
 		},
 	}
-}
-
-// dirOf returns the directory portion of a path.
-func dirOf(p string) string {
-	for i := len(p) - 1; i >= 0; i-- {
-		if p[i] == '/' {
-			return p[:i]
-		}
-	}
-	return "."
 }

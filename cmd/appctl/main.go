@@ -15,7 +15,7 @@ const appID = "app"
 var cliFlags *client.Flags
 
 func newRootCmd() *cobra.Command {
-	root, f := client.Root(appID, "app CLI", "Talks to a running app daemon.", "http://127.0.0.1:8080")
+	root, f := client.Root(appID, "app CLI", "Talks to a running daemon.", "http://127.0.0.1:8080")
 	cliFlags = f
 	root.AddCommand(newAuthCmd(), newWhoamiCmd())
 	return root
