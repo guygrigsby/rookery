@@ -10,6 +10,17 @@ INSTALL_DIR ?= $(HOME)/.local/bin
 LAUNCHD_LABEL := dev.grigsby.$(APP)d
 LAUNCHD_PLIST := $(HOME)/Library/LaunchAgents/$(LAUNCHD_LABEL).plist
 
+# HAS_WEB is non-empty when this app embeds a web SPA. `init.sh --no-web` removes
+# web/, so the build/check/test targets gate their web steps on this to work in
+# both modes from one Makefile.
+HAS_WEB := $(wildcard $(WEB_DIR)/package.json)
+# Run golangci-lint v2 via `go run` so it is built with the module's own Go
+# toolchain. A prebuilt binary built with an older Go refuses a newer go.mod
+# ("the Go language version used to build golangci-lint is lower than the
+# targeted Go version"). Override GOLANGCI to use a locally-installed binary.
+# (Named GOLANGCI, not LINT: make predefines LINT=lint, which ?= won't override.)
+GOLANGCI ?= go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
+
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
@@ -30,7 +41,8 @@ server-build: ## Build the appd daemon (embeds web/dist)
 ctl-build: ## Build the appctl CLI
 	go build -o $(APP)ctl ./cmd/appctl
 
-build: web-build server-build ctl-build ## Build SPA + both binaries
+build: server-build ctl-build ## Build both binaries (+ SPA when web/ is present)
+	@if [ -n "$(HAS_WEB)" ]; then $(MAKE) web-build; fi
 
 server-dev: ## Run appd from source
 	go run ./cmd/appd
@@ -41,15 +53,16 @@ server-test: ## Run Go tests
 web-test: $(WEB_DIR)/node_modules ## Run the vitest suite
 	cd $(WEB_DIR) && npm test
 
-test: server-test web-test ## Run all tests (Go + web + init.sh smoke)
+test: server-test ## Run all tests (Go, web when present, init smoke)
+	@if [ -n "$(HAS_WEB)" ]; then $(MAKE) web-test; fi
 	bash scripts/init_smoke_test.sh
 
 check: ## One-shot quality gate for agents (run before claiming done)
 	@test -z "$$(gofmt -l .)" || { echo "gofmt needs:"; gofmt -l .; exit 1; }
 	go vet ./...
-	@command -v golangci-lint >/dev/null && golangci-lint run || echo "golangci-lint not installed; skipping"
+	$(GOLANGCI) run
 	go test ./...
-	$(MAKE) web-build
+	@if [ -n "$(HAS_WEB)" ]; then $(MAKE) web-build; fi
 
 install: build ## Install both binaries to INSTALL_DIR
 	@mkdir -p $(INSTALL_DIR)
