@@ -90,6 +90,15 @@ EOF
   SED_INPLACE "s|package PKG|package ${NAME}|g; s|Package PKG|Package ${NAME}|g" embed.go
 fi
 
+# Remove template-only scaffolding. These build/test the rookery template
+# itself; a generated app must not ship or run them (notably `make test` must
+# not invoke init_smoke_test.sh). The running init.sh is already loaded into
+# memory, so removing it on disk here is safe.
+for tf in scripts/init_smoke_test.sh scripts/init.sh; do
+  [[ -f "$tf" ]] || continue
+  git rm -q -f "$tf" >/dev/null 2>&1 || rm -f "$tf"
+done
+
 # Fresh issue tracker.
 rm -rf .beads
 if command -v bd >/dev/null 2>&1; then
