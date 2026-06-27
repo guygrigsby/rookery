@@ -1,4 +1,4 @@
-// Command appctl is the rookery CLI client; it talks to a running appd.
+// The rookery CLI client; it talks to a running appd.
 package main
 
 import (

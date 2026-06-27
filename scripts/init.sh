@@ -32,16 +32,19 @@ fi
 # Rewrite all tracked files (minus this script) in-place.
 # Use a while-read loop instead of mapfile: macOS ships bash 3.2 (no mapfile).
 # Tokens applied longest/most-specific first:
-#   module path, launchd label, binary suffixes (appctl before appd),
+#   module path, launchd label, daemon token (appd), CLI source dir (cmd/app)
+#   and CLI run examples (./app ) — both anchored so they can't clobber appd —
 #   package clause, Makefile APP var, env prefix, perch app-id literal,
-#   config/log dirs.
+#   config/log dirs. The CLI binary itself is $(APP) in the Makefile, so it
+#   needs no token here.
 git ls-files | grep -v '^scripts/init.sh$' | while IFS= read -r f; do
   [[ -f "$f" ]] || continue
   SED_INPLACE \
     -e "s|github.com/guygrigsby/rookery|github.com/guygrigsby/${NAME}|g" \
     -e "s|dev\.grigsby\.appd|dev.grigsby.${NAME}d|g" \
-    -e "s|appctl|${NAME}ctl|g" \
     -e "s|appd|${NAME}d|g" \
+    -e "s|cmd/app|cmd/${NAME}|g" \
+    -e "s|\./app |./${NAME} |g" \
     -e "s|^package app\$|package ${NAME}|" \
     -e "s|^# app\$|# ${NAME}|" \
     -e "s|\"app CLI\"|\"${NAME} CLI\"|g" \
@@ -58,7 +61,7 @@ done
 
 # Rename cmd dirs and the plist template file.
 git mv cmd/appd "cmd/${NAME}d"
-git mv cmd/appctl "cmd/${NAME}ctl"
+git mv cmd/app "cmd/${NAME}"
 git mv deploy/dev.grigsby.appd.plist.template "deploy/dev.grigsby.${NAME}d.plist.template"
 
 # Swap the template's own README for the app README (the sed loop above already

@@ -4,15 +4,15 @@ A two-binary daemon/CLI service built on
 [perch](https://github.com/guygrigsby/perch).
 
 - `appd` — the daemon (serves the API + an optional embedded Svelte SPA).
-- `appctl` — the CLI client (`auth login`, `whoami`).
+- the CLI client (`auth login`, `whoami`).
 
 ## Quick start
 
 ```bash
 make build
 ./appd &                 # starts on :8080
-./appctl auth login      # mint + store a token
-./appctl whoami          # authenticated call
+./app auth login         # mint + store a token
+./app whoami             # authenticated call
 ```
 
 ## Make targets

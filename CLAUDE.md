@@ -6,7 +6,7 @@ daemon/CLI built on `github.com/guygrigsby/perch`.
 ## Build & Test
 
 ```bash
-make build    # appd + appctl (+ SPA when web/ is present)
+make build    # daemon + CLI (+ SPA when web/ is present)
 make test     # go test (+ vitest when web/ is present)
 make check    # one-shot gate: gofmt, vet, golangci-lint, test (+ web build if web/)
 make dev      # appd watcher (+ Vite when web/ is present), hot-reload
@@ -19,7 +19,7 @@ done.** It is the same gate CI runs.
 ## Architecture
 
 - `cmd/appd` — daemon. Wires `perch/config` + `internal/api` + `perch/daemon.Serve`.
-- `cmd/appctl` — CLI client over `perch/client` (`auth login`, `auth logout`, `whoami`).
+- `cmd/app` — CLI client over `perch/client` (`auth login`, `auth logout`, `whoami`).
 - `internal/api` — HTTP routes: `/healthz`, loopback `/api/auth/mint`, auth-gated `/api/whoami`, static SPA.
 - `internal/auth` — loopback token mint + SHA-256 hash validate. Customize per app.
 - `embed.go` — embeds `web/dist` (the optional Svelte SPA); a headless build ships a no-embed stub.

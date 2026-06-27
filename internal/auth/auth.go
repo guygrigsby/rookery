@@ -1,4 +1,4 @@
-// Package auth implements a single-token loopback auth model: appctl mints a
+// Package auth implements a single-token loopback auth model: the CLI mints a
 // token over the loopback-only mint endpoint, appd persists its hash and
 // validates bearer tokens against it. This is starter code each app is meant
 // to customize, which is why it lives in the template rather than in perch.

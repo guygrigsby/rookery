@@ -1,4 +1,4 @@
-.PHONY: help web-dev server-dev web-build server-build ctl-build build \
+.PHONY: help web-dev server-dev web-build server-build cli-build build \
         server-test web-test test check clean \
         install install-launchd uninstall-launchd redeploy service-restart dev
 
@@ -38,10 +38,10 @@ web-build: $(WEB_DIR)/node_modules ## Build the SPA into web/dist
 server-build: ## Build the appd daemon (embeds web/dist)
 	go build -o $(APP)d ./cmd/appd
 
-ctl-build: ## Build the appctl CLI
-	go build -o $(APP)ctl ./cmd/appctl
+cli-build: ## Build the app CLI
+	go build -o $(APP) ./cmd/app
 
-build: server-build ctl-build ## Build both binaries (+ SPA when web/ is present)
+build: server-build cli-build ## Build both binaries (+ SPA when web/ is present)
 	@if [ -n "$(HAS_WEB)" ]; then $(MAKE) web-build; fi
 
 server-dev: ## Run appd from source
@@ -66,8 +66,8 @@ check: ## One-shot quality gate for agents (run before claiming done)
 
 install: build ## Install both binaries to INSTALL_DIR
 	@mkdir -p $(INSTALL_DIR)
-	cp $(APP)d $(APP)ctl $(INSTALL_DIR)/
-	@echo "✓ installed $(APP)d, $(APP)ctl to $(INSTALL_DIR)"
+	cp $(APP)d $(APP) $(INSTALL_DIR)/
+	@echo "✓ installed $(APP)d, $(APP) to $(INSTALL_DIR)"
 
 install-launchd: install ## Install + load the appd LaunchAgent (macOS)
 	@mkdir -p $(HOME)/Library/LaunchAgents $(HOME)/.logs/$(APP)
@@ -104,6 +104,6 @@ dev: ## Run appd watcher + Vite together (both hot-reload)
 	  wait
 
 clean: ## Remove build artifacts
-	rm -f $(APP)d $(APP)ctl
+	rm -f $(APP)d $(APP)
 	@find $(WEB_DIR)/dist -mindepth 1 ! -name .gitkeep -exec rm -rf {} + 2>/dev/null || true
 	@echo "✓ clean"

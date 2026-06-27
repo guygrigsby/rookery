@@ -1,6 +1,6 @@
 # Build artifacts
 /appd
-/appctl
+/app
 /bin/
 # Built web assets (the dir is kept by web/dist/.gitkeep; assets are not committed)
 /web/dist/*

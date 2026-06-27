@@ -2,7 +2,7 @@
 
 A GitHub template for small two-binary daemon/CLI apps in Go, built on
 [perch](https://github.com/guygrigsby/perch). Scaffold a new local service in
-one command: a daemon (`appd`), a CLI client (`appctl`), an optional embedded
+one command: a daemon (`appd`), a CLI client (`app`), an optional embedded
 Svelte web UI, loopback token auth, launchd integration, and an agent-ready
 toolchain.
 
@@ -11,7 +11,7 @@ toolchain.
 - **`cmd/appd`** — the daemon. Loads `~/.config/<app>/config.toml`, serves an
   HTTP API and (optionally) an embedded Svelte SPA, and shuts down gracefully
   via perch's signal/serve helpers.
-- **`cmd/appctl`** — the CLI client over perch: `auth login`, `auth logout`,
+- **`cmd/app`** — the CLI client over perch: `auth login`, `auth logout`,
   `whoami`, talking to the daemon with a loopback-minted bearer token.
 - **`internal/auth`** — loopback-only token mint + SHA-256 hash validate.
   Starter code; customize per app.
@@ -32,7 +32,7 @@ toolchain.
    ```
    `<name>` is a lowercase identifier (`^[a-z][a-z0-9]*$`). `init.sh`:
    - rewrites the module path to `github.com/guygrigsby/<name>`,
-   - renames the binaries to `<name>d` / `<name>ctl`,
+   - renames the binaries to `<name>d` / `<name>`,
    - retargets the launchd label (`dev.grigsby.<name>d`) and the
      `~/.config/<name>` + `~/.logs/<name>` paths,
    - re-initializes a fresh bd tracker,
@@ -54,7 +54,7 @@ renames a throwaway copy and confirms it builds — both with and without web.
 
 | target | what it does |
 |---|---|
-| `build` | SPA + `appd` + `appctl` |
+| `build` | SPA + `appd` + `app` |
 | `dev` | daemon watcher + Vite, both hot-reload |
 | `test` | go test + vitest + init smoke test |
 | `check` | one-shot gate: gofmt, `go vet`, golangci-lint, tests, web build |
@@ -71,7 +71,7 @@ renames a throwaway copy and confirms it builds — both with and without web.
 
 ```
 cmd/appd/            # daemon entrypoint
-cmd/appctl/          # CLI client entrypoint
+cmd/app/             # CLI client entrypoint
 internal/api/        # HTTP routes
 internal/auth/       # loopback token mint + validate
 web/                 # Vite + Svelte SPA (optional)
